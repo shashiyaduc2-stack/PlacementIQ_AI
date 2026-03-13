@@ -1,6 +1,7 @@
 import streamlit as st
 import plotly.express as px
 import pandas as pd
+import PyPDF2
 from streamlit_option_menu import option_menu
 
 st.set_page_config(page_title="PlacementIQ AI", layout="wide")
@@ -11,7 +12,7 @@ st.title("🎓 PlacementIQ - AI Career Assistant")
 with st.sidebar:
     selected = option_menu(
         "Menu",
-        ["Dashboard","Skill Analyzer","Career Roadmap","Interview Prep","AI Mentor"],
+       ["Dashboard","Skill Analyzer","Career Roadmap","Interview Prep","Resume Analyzer","AI Mentor"],
         icons=["house","bar-chart","map","chat"],
         menu_icon="menu-button",
         default_index=0
@@ -109,6 +110,42 @@ elif selected == "Interview Prep":
     st.write("Practice DSA problems")
     st.write("Revise core concepts")
     st.write("Prepare projects explanation")
+    # ---------------- RESUME ANALYZER ----------------
+
+elif selected == "Resume Analyzer":
+
+    st.header("AI Resume Analyzer")
+
+    uploaded_file = st.file_uploader(
+        "Upload your resume (PDF)", type="pdf"
+    )
+
+    if uploaded_file is not None:
+
+        pdf_reader = PyPDF2.PdfReader(uploaded_file)
+
+        text = ""
+
+        for page in pdf_reader.pages:
+            text += page.extract_text()
+
+        st.success("Resume uploaded successfully")
+
+        if st.button("Analyze Resume"):
+
+            prompt = f"""
+            Analyze this resume and give suggestions to improve it
+            for placements. Mention missing skills and improvements.
+
+            Resume:
+            {text}
+            """
+
+            answer = ask_ai(prompt)
+
+            st.subheader("AI Resume Feedback")
+
+            st.write(answer)
 import streamlit as st
 import requests
 
@@ -155,3 +192,4 @@ if st.button("Ask AI"):
     if question:
         answer = ask_ai(question)
         st.write(answer)
+
