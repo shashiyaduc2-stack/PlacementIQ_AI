@@ -213,4 +213,19 @@ if st.button("Ask AI"):
     if question:
         answer = ask_ai(question)
         st.write(answer)
+st.sidebar.markdown("---")
+st.sidebar.markdown("### ⭐ Feedback")
 
+feedback = st.sidebar.text_area("Write your feedback")
+
+if st.sidebar.button("Submit Feedback"):
+
+    df = pd.DataFrame([[feedback]], columns=["feedback"])
+
+    if os.path.exists("feedback.csv"):
+        old = pd.read_csv("feedback.csv")
+        df = pd.concat([old, df], ignore_index=True)
+
+    df.to_csv("feedback.csv", index=False)
+
+    st.sidebar.success("Thank you for feedback!")
