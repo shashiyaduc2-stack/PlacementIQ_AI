@@ -2,6 +2,27 @@ import streamlit as st
 import plotly.express as px
 import pandas as pd
 import PyPDF2
+import os
+
+
+VISIT_FILE = "visits.txt"
+
+if not os.path.exists(VISIT_FILE):
+    with open(VISIT_FILE, "w") as f:
+        f.write("0")
+
+with open(VISIT_FILE, "r") as f:
+    visits = int(f.read())
+
+visits += 1
+
+with open(VISIT_FILE, "w") as f:
+    f.write(str(visits))
+st.sidebar.markdown("---")
+st.sidebar.markdown("### 👥 Total Users")
+
+st.sidebar.success(f"{visits} people used this app")
+
 from streamlit_option_menu import option_menu
 
 st.set_page_config(page_title="PlacementIQ AI", layout="wide")
